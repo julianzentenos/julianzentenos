@@ -1,13 +1,11 @@
 """
 Aqui hare el Live Trade
 
-
 Voy a hacer la inclusión de dos ventanas temporales
-
 """
 
-from datetime import datetime #, timedelta
-from ta.momentum import RSIIndicator #RSI
+from datetime import datetime
+from ta.momentum import RSIIndicator
 import pandas as pd
 import time
 import requests
