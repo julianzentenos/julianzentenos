@@ -5,3 +5,5 @@
 - I’m currently working as a research assistant with a full professor from the business school of the Universidad de Chile.
 - How to reach me: jzenteno@fen.uchile.cl
 - My CV: [CV.pdf](https://github.com/user-attachments/files/16113179/CV.pdf)
+
+¡Feel free to check some of my personal and academic works in my repositories!
