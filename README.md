@@ -6,4 +6,4 @@
 - How to reach me: jzenteno@fen.uchile.cl
 - My CV: [CV.pdf](https://github.com/user-attachments/files/16113179/CV.pdf)
 
-¡Feel free to check some of my academic and personal works in [repositories](https://github.com/julianzentenos/julianzentenos/tree/main)!
+¡Feel free to check some of my academic and personal works in my [repositories](https://github.com/julianzentenos/julianzentenos/tree/main)!
