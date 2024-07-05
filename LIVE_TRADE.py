@@ -20,7 +20,7 @@ trades = []
 r_cum = 0
 
 #API's
-SLACK_API ='https://hooks.slack.com/services/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'
+SLACK_API ='LINK'
 
 #MSG NEW SESION
 requests.post(SLACK_API, data = json.dumps({"text":"Nueva Sesión"}))
