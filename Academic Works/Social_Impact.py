@@ -1,7 +1,7 @@
 """
 Julián Zenteno S.
 
-The idea of this work is to construct a sample of the price of stocks in high social unrest (SU) events.
+The idea of this work is to construct a sample of the stocks' price during high social unrest (SU) events.
 """
 
 # Call the packages to use
