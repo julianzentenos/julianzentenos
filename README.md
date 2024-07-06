@@ -5,7 +5,7 @@
 - My principal interests are innovation, sustainability, and technology. As experience, my main works were based on academic investigations about corporate sustainability and social impacts on markets.
 - I’m currently working as a research assistant with a full professor from the business school of the Universidad de Chile.
 - How to reach me: jzenteno@fen.uchile.cl
-- ¡Here is my [CV](https://github.com/user-attachments/files/16116720/CV.pdf) and my [Web Page](https://sites.google.com/fen.uchile.cl/julianzentenos)!
+- ¡Here is my [CV](https://github.com/user-attachments/files/16116810/CV.pdf) and my [Web Page](https://sites.google.com/fen.uchile.cl/julianzentenos)!
 
 
 ¡Feel free to check some of my academic and personal works in my [repositories](https://github.com/julianzentenos/julianzentenos/tree/main)!
