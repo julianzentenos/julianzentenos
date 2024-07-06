@@ -1,4 +1,6 @@
 """
+Julián Zenteno S.
+
 Aqui hare el Live Trade
 
 Voy a hacer la inclusión de dos ventanas temporales
