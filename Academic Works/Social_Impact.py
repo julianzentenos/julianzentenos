@@ -16,7 +16,7 @@ SU = pd.read_csv("EI.csv")
 # Filter US stocks
 DF = DF[DF['ISSUER_CNTRY_DOMICILE'] != 'US']
 
-# Subset the importent variables
+# Subset the important variables
 DF = DF[['ISSUER_TICKER', 'ISSUER_ISIN', 'ISSUER_CNTRY_DOMICILE', 'AS_OF_DATE', 'SOCIAL_PILLAR_SCORE']]
 
 # Rename the variables
