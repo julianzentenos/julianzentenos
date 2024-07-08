@@ -1,4 +1,6 @@
 """
+Julián Zenteno S.
+
 Aqui desarrollare un programa para decargar los datos Tesis
 Datos a descargar: FLOWS
 """
@@ -53,7 +55,4 @@ for i in df["RIC"]:
 
     pyautogui.click()
 
-#Funciono perfecto
-
-
-
+#Funcionó...
