@@ -1,0 +1,407 @@
+---
+title: "EVALUACIÓN DE MOMENTOS DE LA DISTRIBUCIÓN DE FLUJOS EN FONDOS ESG CON FOCO EN LATAM"
+author: "Estudiante: Julián Zenteno S."
+institute: "Profesor Guía: Claudio Raddatz K."
+output: 
+  beamer_presentation:
+    theme: "Rochester"
+header-includes:
+  - \usepackage{caption}
+  - \usepackage{longtable}
+  - \usepackage[document]{ragged2e}
+  - \titlegraphic{\vspace*{-1cm}\includegraphics[width=1cm]{escudo.png}}
+  - \setbeamertemplate{itemize items}[circle]
+fontsize: 10pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = F, warning = F)
+```
+
+```{r}
+
+#Paquetes
+library(readr)
+library(knitr)
+library(scales)
+library(ggplot2)
+library(dplyr)
+library(moments)
+library(stargazer)
+library(kableExtra)
+library(quantreg)
+library(tidyverse)
+library(tseries)
+library(zoo)
+library(e1071)
+
+
+#Ambiente
+rm(list = ls())
+setwd("D:/U/ESG/ESG")
+
+#Cargo Datos
+DF <- na.omit(read_csv("DF_RMD.csv", show_col_types = FALSE))
+
+```
+
+
+# Introducción
+
+## Introducción
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\item Motivación.
+\item Puntaje ESG.
+\item Revisión de literatura.
+\item Desarrollo de hipótesis.
+\item Descripción de la muestra y las variables.
+\item Metodología.
+\item Resultados.
+\item Robustez.
+\item Análisis de temporalidad (k).
+\item Análisis de variables interactivas.
+\item Análisis cuantílico.
+\item Conclusión.
+\end{itemize}
+\end{overlayarea}
+
+# Motivación
+
+## Motivación
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\item Creciente relevancia de la sustentabilidad empresarial.
+\justifying
+\item Ejemplos: Acuerdo de París (2015). Implementación del Sustainable Finance Disclosure Regulation, UE (2018).
+\justifying
+\item Nuevos instrumentos:
+\vspace{0.5cm}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{N1.png}
+  \captionsetup{labelformat=empty} 
+  \caption{Fuente: Ministerio de Hacienda. Noticias y Eventos.}
+\end{figure}
+\end{itemize}
+\end{overlayarea}
+
+
+# Puntaje ESG
+
+## Puntaje ESG
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item Evaluación de empresas por medio de tres ejes principales:
+\end{itemize}
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{ESG.png}
+  \captionsetup{labelformat=empty}
+\end{figure}
+\begin{itemize}
+\justifying
+\item Puntaje por categoría $\rightarrow$ Ponderación por industria $\rightarrow Pntj\_ESG_i$. Este va de 0 a 100, donde mayor sea el puntaje mejor es el desempeño.
+\end{itemize}
+\end{overlayarea}
+
+# Revisión de literatura
+
+## Revisión de literatura: Sobre acciones
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item Poco consenso en el efecto sobre la media de los retornos de acciones.
+\justifying
+\item Firmas que aumentan su Puntaje ESG disminuyen la varianza de su  retorno (Becchetti, L. et al. 2018; Kaiser, L., \& Welters, J. 2019; Albuquerque, R. et al. 2020).
+\justifying
+\item Firmas con mayor Puntaje ESG tienen menor riesgo de colapso (Kim, Y. et al. 2014; Nofsinger, J. R. et al. 2019)
+\end{itemize}
+\end{overlayarea}
+
+## Revisión de literatura: Sobre el retorno de fondos
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item Poco consenso en el efecto sobre la media de los retornos de fondos:
+\begin{itemize}
+\justifying
+\item Fondos con mayor Puntaje ESG obtienen mayores retornos (Henke, H.M., \& Mählmann, T. 2016). Esto es más evidente en periodos de crisis (Nofsinger, J., \& Varma, A. 2014).
+\justifying
+\item El uso de criterios ESG perjudica la optimización del retorno del fondo (Renneboog, L. et al. 2008).
+\end{itemize}
+\justifying
+\item Fondos con mejor desempeño sustentable disminuyen la varianza de sus retornos. Se deriva un rol asegurador (Becchetti, L. et al. 2015).
+\justifying
+\item Fondos ESG tienen menor probabilidad de perdidas de valor (Cerqueti, R. et al. 2021).
+\end{itemize}
+\end{overlayarea}
+
+## Revisión de literatura: Sobre el flujo de fondos
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item Fondos ESG tienen flujos con mayor media:
+\begin{itemize}
+\justifying
+\item Información sustentable positiva genera flujos de entrada (Hartzmark, S.M., \& Sussman, A.B. 2019).
+\end{itemize}
+\justifying
+\item Fondos ESG tienen flujos con menor varianza:
+\begin{itemize}
+\justifying
+\item Compromiso moral y mayor horizonte de inversión le da estabilidad a los flujos (Chernev, A., \& Blair, S. 2020; Starks, L. T. et al. 2017).
+\justifying
+\item Fondos ESG debilitan su relación flujo-retorno (Benson, K. L., \& Humphrey, J. E. 2008; El Ghoul, S., \& Karoui, A. 2017).
+\end{itemize}
+\justifying
+\item Fondos ESG tienen flujos con mayor asimetría:
+\begin{itemize}
+\justifying
+\item Inversionistas ESG son menos sensibles al retorno negativo, y más al positivo (Bollen, N. P. B. 2007).
+\justifying
+\item Inversionistas ESG tienen mayor probabilidad de generar flujos de entrada que de salida (Renneboog, L. et al. 2011).
+\end{itemize}
+\end{itemize}
+\end{overlayarea}
+
+# Desarrollo de hipótesis
+
+## Desarrollo de hipótesis
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item H1: El Puntaje ESG de un fondo impacta la media de sus flujos de forma positiva. 
+$$ \uparrow Pntj\_ESG_j \rightarrow \  \uparrow FPM_{j,t+1,k} \Leftrightarrow 0 < \hat{\beta_{1}}$$
+\justifying
+\item H2: El Puntaje ESG de un fondo impacta la varianza de sus flujos de forma negativa.
+$$ \uparrow Pntj\_ESG_j \rightarrow \  \downarrow FPV_{j,t+1,k} \Leftrightarrow \hat{\beta_{1}} < 0$$
+\justifying
+\item H3: El Puntaje ESG de un fondo impacta la asimetría de sus flujos de forma positiva.
+$$ \uparrow Pntj\_ESG_j \rightarrow \  \uparrow FPA_{j,t+1,k} \Leftrightarrow 0 < \hat{\beta_{1}}$$
+\end{itemize}
+\end{overlayarea}
+
+# Descripción de la muestra y las variables
+
+## Descripción de la muestra
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item Fuente de los datos: Refinitiv.
+\justifying
+\item La muestra contempla 251 fondos.
+\justifying
+\item Foco geográfico de inviersión en LATAM o en países de esta región.
+\justifying
+\item Observaciones mensuales desde el año 2013 hasta el 2023.
+\end{itemize}
+\end{overlayarea}
+
+## Descripción de las variables
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item Flujo Porcentual:
+$$ Flujo_{j,t}=\frac{DF_{j,t}}{TNA_{j,t-1}} $$
+\justifying
+\item Media, Varianza y Asimetría móvil del flujo porcentual: $FPM_{j,t,k}$, $FPV_{j,t,k}$ y $FPA_{j,t,k}$.
+\justifying
+\item Puntaje ESG del fondo $j$: $Pntj\_ESG_j = \sum_{i=1}^{n} Pntj\_ESG_{i} \cdot w_i$.
+\justifying
+\item Retorno:
+$$ R_{j,t} = \frac{NAV_{j,t} - NAV_{j,t-1}}{NAV_{j,t-1}} $$
+\justifying
+\item Media, Varianza y Asimetría móvil del retorno: $RM_{j,t,k}$, $RV_{j,t,k}$ y $RA_{j,t,k}$.
+\justifying
+\item Madurez y Tamaño: $MSL_{j,t}$, en meses, y $TNA_{j,t}$, en millones de dólares.
+\justifying
+\item Efectos fijos para foco geográfico de inversión y domicilio del fondo.
+\end{itemize}
+\end{overlayarea}
+
+# Metodología
+
+## Metodología
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item Mínimos Cuadrados Ordinarios(MCO): Bollen, N. P. B. (2007), ElGhoul, S. \& Karoui , A.(2017), y Renneboog, L. et al. (2011).
+\justifying
+\item Defino tres modelos:
+
+$$ FPM_{j,t,k} = \beta_0 + \beta_1 \cdot Pntj\_ESG_j   +  \left[Controles\right] \cdot \phi ' + \epsilon_{j,t,k}  $$
+
+$$ log(FPV_{j,t,k}) = \beta_0 + \beta_1 \cdot Pntj\_ESG_j   +  \left[Controles\right] \cdot \phi ' + \epsilon_{j,t,k}  $$
+
+$$ FPA_{j,t,k} = \beta_0 + \beta_1 \cdot Pntj\_ESG_j   +  \left[Controles\right] \cdot \phi ' + \epsilon_{j,t,k}  $$
+\justifying
+\item Controles: $RM_{j,t,k}$, $RV_{j,t,k}$, $RA_{j,t,k}^*$, $MSL_{j,t}$, $log(TNA_{j,t})$, efectos fijos por foco geográfico de inversión y domicilio del fondo.
+\end{itemize}
+\end{overlayarea}
+
+# Resultados
+
+## Resultados
+
+\begin{table}[!htbp] 
+\centering 
+\label{} 
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{\extracolsep{0pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & $FPM_{j,t+1,k=12}$ & $log(FPV_{j,t+1,k=12})$ & $FPA_{j,t+1,k=12}$\\ 
+\hline \\[-1.8ex] 
+Pntj ESG & 0.069$^{***}$ & 0.019$^{***}$ & 0.007$^{***}$ \\
+$RM_{j,t,k=12}$ & 0.992$^{***}$ &  0.193$^{***}$ & 0.068$^{***}$ \\ 
+$RV_{j,t,k=12}$ & $-$0.001 &  0.006$^{***}$ &  0.0005$^{*}$ \\ 
+$RA_{j,t,k=12}$ & -   &  -  &   0.095$^{***}$ \\ 
+$MSL_{j,t}$ & $-$0.012$^{***}$ & $-$0.007$^{***}$  & $-$0.001$^{***}$ \\ 
+$log(TNA_{j,t})$ & 0.183$^{***}$  & $-$0.258$^{***}$  &  0.049$^{***}$ \\
+\hline 
+\hline \\[-1.8ex] 
+\textit{Nota:}  & \multicolumn{3}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular} 
+} % end of \resizebox
+\end{table}
+
+# Robustez
+
+## Robustez
+
+\begin{table}[!htbp] 
+\centering 
+\label{} 
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{\extracolsep{0pt}}lcccc} 
+\\
+\hline 
+\hline 
+\multicolumn{5}{c}{Parametros estimados para el Puntaje ESG} \\
+\hline 
+\\[-1.8ex] & (Sin Filtro) & ($MSL_{j,t} > 60$) & ($TNA_{j,t} > \$750.000$) & (Ef. Mediano)\\ 
+\hline \\[-1.8ex] 
+ $FPM_{j,t+1,k=12}$      & 0.069$^{***}$ & 0.101$^{***}$ & 0.059$^{***}$ & 0.031$^{***}$ \\ 
+ $log(FPV_{j,t+1,k=12})$ & 0.019$^{***}$ & 0.005         & 0.017$^{***}$ & $-$0.003 \\ 
+ $FPA_{j,t+1,k=12}$      & 0.007$^{***}$ & 0.001         & 0.007$^{**}$ & 0.005$^{**}$ \\ 
+\hline 
+\hline
+\textit{Nota:}  & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular} 
+} % end of \resizebox
+\end{table}
+
+# Análisis de temporalidad (k)
+
+## Análisis de temporalidad (k)
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item Evalúo distintos anchos para los cálculos móviles.
+\justifying
+\item Estimo los resultados usando ventanas de 6, 9, 12, 18, 24 y 36 meses.
+\justifying
+\item Mayor ventana ($k$):
+\begin{itemize}
+\justifying
+\item Aumenta la significancia estadística y no cambia el parámetro estimado ($\hat{\beta_1}$) para $FPM_{j,t+1,k}$ y $log(FPV_{j,t+1,k})$.
+\justifying
+\item Aumenta el parámetro estimado ($\hat{\beta_1}$) y se mantiene la significancia estadística para $FPA_{j,t+1,k}$
+\end{itemize}
+\end{itemize}
+\end{overlayarea}
+
+# Análisis de variables interactivas
+
+## Análisis de variables interactivas
+
+\begin{table}[!htbp] 
+\centering 
+\label{} 
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{\extracolsep{0pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline
+\\ [-1.8ex]   & $FPM_{j,t+1,k=12}$ & $log(FPV_{j,t+1,k=12})$ & $FPA_{j,t+1,k=12}$\\ 
+\hline
+\hline
+ Puntaje ESG & 0.123$^{***}$ & $-$0.007 &  0.025$^{***}$ \\ 
+ $RM_{j,t,k=12}$ & $-$0.008 &  0.615$^{***}$ &  0.190 $^{***}$ \\ 
+ $RV_{j,t,k=12}$ & 0.070$^{***}$ &  $-$0.029$^{***}$ & 0.023$^{***}$ \\ 
+ $RA_{j,t,k=12}$ &   -   &    -   & 0.686$^{***}$ \\ 
+ $RM_{j,t,k=12} * PtjESG$ & 0.015$^{**}$ & $-$0.006$^{***}$ & $-$0.002$^{*}$\\ 
+ $RV_{j,t,k=12} * PtjESG$ & $-$0.001$^{***}$ &  0.001$^{***}$ & $-$0.0003$^{***}$\\ 
+ $RA_{j,t,k=12} * PtjESG$ &   -   &   -   & $-$0.009$^{***}$\\
+\hline 
+\hline
+\textit{Nota:}  & \multicolumn{3}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular} 
+} % end of \resizebox
+\end{table}
+
+# Análisis cuantílico
+
+## Análisis cuantílico
+
+\begin{table}[!htbp] 
+\centering 
+\label{} 
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{\extracolsep{0pt}}lcccccc} 
+\\
+\hline 
+\hline 
+\multicolumn{7}{c}{Resultados Regresiones Cuantílicas sobre $FPM_{j,t+1,k}$} \\
+\hline 
+Percentil & $k = 6$ & $k = 9$ & $k = 12$ & $k = 18$ & $k = 24$ & $k = 36$ \\ 
+\hline \\[-1.8ex] 
+ $Q_{0.10}$ & -0.001 & 0.013 & 0.025$^{***}$ & 0.040$^{***}$ & 0.054$^{***}$ & 0.055$^{***}$ \\ 
+ $Q_{0.25}$ & 0.017$^{***}$ & 0.014$^{**}$ & 0.012$^{**}$ & 0.025$^{***}$ & 0.036$^{***}$ & 0.042$^{***}$ \\ 
+ $Q_{0.40}$ & 0.021$^{***}$ & 0.014$^{***}$ & 0.022$^{***}$ & 0.036$^{***}$ & 0.039$^{***}$ & 0.062$^{***}$ \\ 
+ $Q_{0.50}$ & 0.028$^{***}$ & 0.024$^{***}$ & 0.031$^{***}$ & 0.036$^{***}$ & 0.037$^{***}$ & 0.059$^{***}$ \\ 
+ $Q_{0.60}$ & 0.030$^{***}$ & 0.033$^{***}$ & 0.030$^{***}$ & 0.032$^{***}$ & 0.036$^{***}$ & 0.051$^{***}$ \\ 
+ $Q_{0.75}$ & 0.028$^{**}$ & 0.025$^{**}$ & 0.030$^{**}$ & 0.030$^{***}$ & 0.016$^{*}$ & 0.027$^{***}$ \\ 
+ $Q_{0.90}$ & 0.108$^{**}$ & 0.054 & 0.055$^{**}$ & 0.025 & 0.035$^{*}$ & 0.093$^{***}$ \\ 
+\hline
+\hline
+\textit{Nota:}  & \multicolumn{6}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular} 
+} % end of \resizebox
+\end{table}
+
+# Conclusión
+
+## Conclusión
+
+\begin{overlayarea}{\textwidth}{7cm}
+\begin{itemize}
+\justifying
+\item Aumentos del $Pntj\_ESG_j$ de un fondo aumentan la media de sus flujos.
+\justifying
+\item Aumentos del $Pntj\_ESG_j$ de un fondo aumentan la asimetría de sus flujos.
+\justifying
+\item No encuentro evidencia significativa del efecto del $Pntj\_ESG_j$ sobre la varianza de los flujos de los fondos.
+\justifying
+\item Un mayor $Pntj\_ESG_j$ disminuye la sensibilidad flujo-retorno de un fondo.
+\end{itemize}
+\end{overlayarea}
+
+---
+ 
+\maketitle
+
+
+
