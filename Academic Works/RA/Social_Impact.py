@@ -43,9 +43,6 @@ SU['Date'] = pd.to_datetime(SU['Date'])
 # Rename the variables
 SU.rename(columns={'Pais_A2':'Cntry'}, inplace=True)
 
-# Filter US events
-SU = SU[SU['Cntry'] != 'US']
-
 # Define the sample window
 SU['SDate'] = SU['Date'] - pd.DateOffset(months=3)
 SU['EDate'] = SU['Date'] + pd.DateOffset(months=3)
