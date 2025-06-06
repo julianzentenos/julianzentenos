@@ -1,4 +1,4 @@
-- Hi, I’m @julianzentenos. I completed a Bachelor of Science in Economics and a Master of Science in Finance (c).
+- Hi, I’m @julianzentenos. I completed a Bachelor of Science in Economics and a Master of Science in Finance.
 - In my master's thesis project, I treated the relation between the corporate responsibility and the flow distribution of the investment funds from LATAM.
   There I found that, funds with higher corporate responsibility score increase the probability of in-flows, which implies a higher first and third moment of the funds' flows distribution. [Here is my work](https://repositorio.uchile.cl/handle/2250/199648).
 - My principal interests are innovation, sustainability, and technology. As experience, my main works were based on academic investigations about corporate sustainability and social impacts on markets.
